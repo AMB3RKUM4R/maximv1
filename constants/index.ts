@@ -80,22 +80,7 @@ export const Skill_data = [
 
 ];
 
-export const Socials = [
-    {
-        name: "Instagram",
-        src: "/instagram.svg",
-    },
-    {
-        name: "Facebook",
-        src: "/facebook.svg",
-    },
-    {
-        name: "Discord",
-        src: "/discord.svg",
-    },
-];
-
-
+// The 'Socials' constant has been removed as it is no longer used in the new Navbar.
 
 export const Frontend_skill = [
     {
@@ -250,7 +235,3 @@ export const Other_skill = [
         height: 60,
     },
 ];
-
-
-
-

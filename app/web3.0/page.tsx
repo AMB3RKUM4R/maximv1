@@ -1,11 +1,11 @@
 import TemplateGrid from "@/components/main/TemplateGrid";
-import { web2_templates } from "@/constants/templates";
+import { web3_templates } from "@/constants/templates";
 
-export default function Home() {
+export default function Web3Page() {
   return (
     <main className="h-full w-full">
       <div className="flex flex-col items-center justify-center">
-        <TemplateGrid templates={web2_templates} title="Web 2.0 Templates" />
+        <TemplateGrid templates={web3_templates} title="Web 3.0 Templates" />
       </div>
     </main>
   );
