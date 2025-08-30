@@ -1,21 +1,15 @@
 "use client";
 
 import React from 'react';
-import { User, ShieldCheck, BookOpen, Star, Award, PenTool } from 'lucide-react';
+import { User, ShieldCheck, BookOpen, Star, Award, PenTool, GraduationCap } from 'lucide-react';
 import { CyberCard } from '@/components/ui/CyberCard';
 import Link from 'next/link';
 import { useTestResults } from '../context/TestResultsContext';
-
-// This would come from your real database
-const userData = {
-    name: 'Aspirant Genius',
-    email: 'user@example.com',
-    isWinner: false, 
-    enrolledWorkshops: [],
-};
+import { useAuth } from '../hooks/useAuth';
 
 const AccountPage = () => {
-    const { results } = useTestResults(); // Use the hook to get results
+    const { results } = useTestResults();
+    const { user } = useAuth();
 
     const TestResultDisplay = ({ testName }: { testName: 'Web 2.0' | 'Web 2.5' | 'Web 3.0' }) => {
         const result = results[testName];
@@ -30,18 +24,22 @@ const AccountPage = () => {
         <div className="min-h-screen pt-32 pb-20 px-4 md:px-10">
             <div className="max-w-5xl mx-auto">
                 <div className="flex items-center gap-6 mb-12">
-                    <div className="p-4 bg-cyber-purple/20 border-2 border-cyber-purple rounded-full">
+                     <div className="p-4 bg-cyber-purple/20 border-2 border-cyber-purple rounded-full">
                         <User size={40} className="text-cyber-purple" />
                     </div>
                     <div>
-                        <h1 className="text-4xl font-bold text-white">Welcome, {userData.name}</h1>
-                        <p className="text-gray-400">{userData.email}</p>
+                        <h1 className="text-4xl font-bold text-white">Welcome, {user?.displayName || user?.email}</h1>
+                        <p className="text-gray-400">{user?.email}</p>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    {/* Your Status Card */}
                     <CyberCard>
-                        <h2 className="text-2xl font-bold text-white mb-6">Your Status</h2>
+                        {/* This is the correct way to write a multi-line comment in JSX.
+                            The content for the status card remains the same.
+                        */}
+                         <h2 className="text-2xl font-bold text-white mb-6">Your Status</h2>
                         <div className="space-y-6">
                             <div className="flex items-center gap-4">
                                 <ShieldCheck size={24} className="text-cyber-primary" />
@@ -64,10 +62,23 @@ const AccountPage = () => {
                             </div>
                         </div>
                     </CyberCard>
-                    <CyberCard>
-                        <h2 className="text-2xl font-bold text-white mb-6">Enrolled Workshops</h2>
-                        {userData.enrolledWorkshops.length === 0 ? (
-                             <div className="text-center py-8 flex flex-col items-center justify-center h-full">
+                    
+                    {/* Learning Hub & Workshops Card */}
+                     <div className="flex flex-col gap-12">
+                        <Link href="/learning-hub">
+                            <CyberCard>
+                                <div className="flex items-center gap-6">
+                                    <GraduationCap size={40} className="text-cyber-primary"/>
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-white">Learning Hub</h2>
+                                        <p className="text-gray-400">Access your exclusive tutorials and resources.</p>
+                                    </div>
+                                </div>
+                            </CyberCard>
+                        </Link>
+                         <CyberCard>
+                            <h2 className="text-2xl font-bold text-white mb-6">Enrolled Workshops</h2>
+                            <div className="text-center py-8 flex flex-col items-center justify-center h-full">
                                 <BookOpen size={40} className="mx-auto text-gray-600"/>
                                 <p className="mt-4 text-gray-400">You are not enrolled in any workshops yet.</p>
                                 <Link href="/#workshops">
@@ -76,10 +87,8 @@ const AccountPage = () => {
                                     </button>
                                 </Link>
                             </div>
-                        ) : (
-                           <div>{/* UI for enrolled workshops */}</div>
-                        )}
-                    </CyberCard>
+                        </CyberCard>
+                     </div>
                 </div>
             </div>
         </div>

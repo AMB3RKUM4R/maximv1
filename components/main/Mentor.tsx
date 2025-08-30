@@ -20,14 +20,12 @@ const Mentor = () => {
                     </div>
                 </div>
                 <div>
-                    {/* Placeholder for your professional photo */}
                     <div className="relative w-full max-w-sm mx-auto h-96 bg-gray-900 border-4 border-cyber-primary rounded-lg shadow-[0_0_25px_rgba(255,213,0,0.5)]">
                          <Image 
-                            src="/placeholder-mentor.png" // Create a placeholder image
+                            src="/placeholder-mentor.png"
                             alt="Photo of the Mentor"
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-md opacity-80"
+                            fill={true} // Corrected
+                            className="object-cover rounded-md opacity-80" // Corrected
                          />
                          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                          <p className="absolute bottom-4 left-4 text-white text-2xl font-bold">Your Name Here</p>

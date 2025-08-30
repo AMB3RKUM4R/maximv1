@@ -62,6 +62,7 @@ const InfiniteShowcase = () => {
         if (inView && hasMore) {
             setTimeout(loadMoreProjects, 500);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inView, hasMore]);
 
     return (

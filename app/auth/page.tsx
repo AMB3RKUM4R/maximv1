@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
@@ -12,15 +12,15 @@ import {
 import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { auth, db, upiLink } from '../firebaseConfig'; // Adjust path if needed
 import { CyberButton } from '@/components/ui/CyberButton';
-import toast from 'react-hot-toast';
+import toast from 'react-hot-toast'; // You may need to install this: npm install react-hot-toast
 import Link from 'next/link';
 
 const AuthPage = () => {
     const [mode, setMode] = useState<'login' | 'signup'>('signup');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState(''); // For signup
-    const [phone, setPhone] = useState(''); // For signup
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [membershipStatus, setMembershipStatus] = useState('none');
@@ -29,7 +29,6 @@ const AuthPage = () => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
             if (currentUser) {
-                // Check membership status from Firestore
                 const playerRef = doc(db, 'Players', currentUser.uid);
                 const playerSnap = await getDoc(playerRef);
                 if (playerSnap.exists() && playerSnap.data().membership === 'lifetime') {
@@ -37,31 +36,28 @@ const AuthPage = () => {
                 } else {
                     setMembershipStatus('none');
                 }
+            } else {
+                setMembershipStatus('none');
             }
         });
         return () => unsubscribe();
     }, []);
 
-    const handleAuthSuccess = async (user: User, isNewUser: boolean) => {
-        if (!isNewUser) return; // Only create doc for new users
-
-        // This function creates the user document strictly following your rules
+    const handleNewUserSetup = async (user: User) => {
         const playerRef = doc(db, 'Players', user.uid);
+        // This data structure strictly follows your `isValidPlayerCreateData` rule
         const playerData = {
-            // Your rules require 'Name' and 'PhoneNumber' on create
             Name: name || user.displayName || "Genius Aspirant",
-            PhoneNumber: phone || user.phoneNumber || "",
+            PhoneNumber: phone || "",
             WalletBalance: 0.0,
             IsAdmin: false,
             CreatedAt: serverTimestamp(),
-            // Optional fields allowed by your rules
             email: user.email,
-            membership: 'none',
-            referralCode: `NCG-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+            membership: 'none', // All new users start with no membership
             userId: user.uid,
         };
         await setDoc(playerRef, playerData);
-        toast.success("Account created successfully!");
+        toast.success("Account created! Please complete payment.");
     };
 
     const handleSignUp = async (e: React.FormEvent) => {
@@ -69,7 +65,24 @@ const AuthPage = () => {
         setLoading(true);
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            await handleAuthSuccess(userCredential.user, true);
+            await handleNewUserSetup(userCredential.user);
+        } catch (error: any) {
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const handleGoogleSignIn = async () => {
+        setLoading(true);
+        const provider = new GoogleAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const playerRef = doc(db, 'Players', result.user.uid);
+            const playerSnap = await getDoc(playerRef);
+            if (!playerSnap.exists()) {
+                await handleNewUserSetup(result.user);
+            }
         } catch (error: any) {
             toast.error(error.message);
         } finally {
@@ -89,55 +102,35 @@ const AuthPage = () => {
             setLoading(false);
         }
     };
-
-    const handleGoogleSignIn = async () => {
-        setLoading(true);
-        const provider = new GoogleAuthProvider();
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const playerRef = doc(db, 'Players', result.user.uid);
-            const playerSnap = await getDoc(playerRef);
-            if (!playerSnap.exists()) {
-                await handleAuthSuccess(result.user, true);
-            }
-        } catch (error: any) {
-            toast.error(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
     
-    // Logged-in view
     if (user) {
         return (
             <div className="min-h-screen flex items-center justify-center p-4">
                 <div className="w-full max-w-md bg-black/80 border-2 border-gray-800 rounded-lg p-8 text-center">
                     <h1 className="text-2xl font-bold text-white mb-2">Welcome, {user.displayName || user.email}</h1>
-                    <p className="text-gray-400 mb-6">Your account is ready.</p>
                     {membershipStatus !== 'lifetime' ? (
                         <>
-                            <p className="text-cyber-primary mb-4">Complete your registration by paying the one-time ₹49 membership fee.</p>
+                            <p className="text-cyber-primary mb-4">Your account is created. Complete your registration by paying the one-time ₹49 membership fee.</p>
                             <a href={upiLink}>
                                 <CyberButton className="w-full">Pay ₹49 with UPI</CyberButton>
                             </a>
-                            <p className="text-xs text-gray-600 mt-4">After payment, your membership will be activated by our team. Please check back later.</p>
+                            <p className="text-xs text-gray-600 mt-4">After payment, our team will verify the transaction and activate your membership. Please check back later.</p>
                         </>
                     ) : (
                          <>
-                            <p className="text-cyber-primary font-bold text-lg mb-4">LIFETIME MEMBER</p>
-                            <p className="text-gray-300 mb-6">You have full access. You can now take the exam or enroll in workshops.</p>
+                            <p className="text-green-400 font-bold text-lg mb-4">LIFETIME MEMBERSHIP ACTIVE</p>
+                            <p className="text-gray-300 mb-6">You have full access. You can now proceed to the entrance exam.</p>
                              <Link href="/exam">
                                 <CyberButton className="w-full">Go to Exam</CyberButton>
                              </Link>
                          </>
                     )}
-                     <button onClick={() => auth.signOut()} className="mt-6 text-gray-500 hover:text-white">Sign Out</button>
+                     <button onClick={() => auth.signOut()} className="mt-6 text-gray-500 hover:text-white transition-colors">Sign Out</button>
                 </div>
             </div>
         );
     }
 
-    // Login/Signup view
     return (
         <div className="min-h-screen flex items-center justify-center p-4">
             <div className="w-full max-w-md bg-black/80 border-2 border-gray-800 rounded-lg p-8">
@@ -150,15 +143,13 @@ const AuthPage = () => {
                         </>
                     )}
                     <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full p-3 bg-gray-900/50 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-cyber-primary" />
-                    <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full p-3 bg-gray-900/50 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-cyber-primary" />
+                    <input type="password" placeholder="Password (min. 6 characters)" value={password} onChange={e => setPassword(e.target.value)} required className="w-full p-3 bg-gray-900/50 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-cyber-primary" />
                     <CyberButton type="submit" disabled={loading} className="w-full">
                         {loading ? 'Processing...' : (mode === 'signup' ? 'Sign Up' : 'Log In')}
                     </CyberButton>
                 </form>
                 <div className="flex items-center my-4">
-                    <div className="flex-grow border-t border-gray-700"></div>
-                    <span className="flex-shrink mx-4 text-gray-500">OR</span>
-                    <div className="flex-grow border-t border-gray-700"></div>
+                    <div className="flex-grow border-t border-gray-700"></div><span className="mx-4 text-gray-500">OR</span><div className="flex-grow border-t border-gray-700"></div>
                 </div>
                 <button onClick={handleGoogleSignIn} disabled={loading} className="w-full py-3 bg-gray-800 text-white font-bold rounded-md border-2 border-gray-700 hover:border-white transition-colors">
                     Continue with Google

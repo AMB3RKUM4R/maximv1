@@ -28,6 +28,7 @@ const MockTest = ({ questions, testName }: MockTestProps) => {
     }
     const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished, timeLeft]);
 
   const handleSubmit = () => {

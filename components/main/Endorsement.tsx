@@ -6,13 +6,11 @@ const Endorsement = () => {
         <section id="support" className="py-20 px-4 md:px-10">
             <div className="max-w-4xl mx-auto bg-black/80 border-2 border-gray-800 rounded-lg flex flex-col md:flex-row items-center gap-8 p-8">
                 <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-cyber-primary flex-shrink-0">
-                    {/* Placeholder for your sister's photo */}
                     <Image
-                        src="/placeholder-celebrity.png" // Create a placeholder image
+                        src="/placeholder-celebrity.png"
                         alt="Nona Berry"
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-full"
+                        fill={true} // Corrected
+                        className="object-cover rounded-full" // Corrected
                     />
                 </div>
                 <div className="text-center md:text-left">
