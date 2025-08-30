@@ -1,19 +1,18 @@
-// firebaseConfig.ts
 'use client';
 
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 
-// IMPORTANT: Move your actual keys to a .env.local file
+// Firebase keys are hardcoded as per your request.
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyCKxnTu5cvE4m0wFGAuMoN6HHRtvdX3SCI",
+  authDomain: "bhartiya-matkkka-pub.firebaseapp.com",
+  projectId: "bhartiya-matkkka-pub",
+  storageBucket: "bhartiya-matkkka-pub.firebasestorage.app",
+  messagingSenderId: "766901673732",
+  appId: "1:766901673732:web:4a74edf7d897a4a7687a51",
+  measurementId: "G-3M87EDZFNM"
 };
 
 let app: FirebaseApp;
@@ -27,7 +26,7 @@ if (!getApps().length) {
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
 
-// Your new UPI Intent Link
+// Your updated UPI Intent Link
 export const upiLink = "upi://pay?pa=deamonstillalive3@icici&pn=NextComputerGenius&am=49.00&cu=INR&tn=NCGMembership";
 
 export { app, auth, db };
