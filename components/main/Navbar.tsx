@@ -2,18 +2,19 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Home, Combine, Blocks, User, PenTool } from 'lucide-react';
+import { CyberButton } from '../ui/CyberButton';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const sectionLinks = [
-        { href: '/#workshops', title: 'Workshops' },
-        { href: '/#showcase', title: 'Showcase' },
-        { href: '/#mentor', title: 'Mentor' },
+    const mainNavLinks = [
+        { href: '/', title: 'Home', icon: Home },
+        { href: '/web2.5', title: 'Web 2.5', icon: Combine },
+        { href: '/web3.0', title: 'Web 3.0', icon: Blocks },
     ];
 
-    const pageLinks = [
+    const userLinks = [
         { href: '/exam', title: 'Exam' },
         { href: '/account', title: 'My Account' },
     ];
@@ -27,30 +28,31 @@ const Navbar = () => {
                     </span>
                 </Link>
 
-                <div className='hidden md:flex items-center gap-8'>
-                    {/* Section Links */}
-                    <div className='flex items-center space-x-8 text-gray-300'>
-                        {sectionLinks.map((link) => (
-                            <Link key={link.href} href={link.href} className='hover:text-cyber-primary transition-colors duration-300'>
-                                {link.title}
+                {/* Desktop: Main Showcase Links */}
+                <div className='hidden md:flex w-auto h-full flex-row items-center justify-center'>
+                    <div className='flex items-center justify-around w-full h-auto border border-gray-800 bg-black/50 px-[20px] py-[10px] rounded-full text-gray-200 space-x-8'>
+                        {mainNavLinks.map((link) => (
+                            <Link key={link.href} href={link.href} className='flex items-center gap-2 cursor-pointer text-gray-300 hover:text-cyber-primary transition-colors' title={link.title}>
+                                <link.icon className={`h-5 w-5`} />
+                                <span className="text-sm font-semibold">{link.title}</span>
                             </Link>
                         ))}
                     </div>
                 </div>
                 
+                {/* Desktop: User & Action Links */}
                 <div className='hidden md:flex items-center space-x-6'>
-                    {/* Page links */}
-                    {pageLinks.map((link) => (
+                    {userLinks.map((link) => (
                          <Link key={link.href} href={link.href} className='text-gray-300 hover:text-cyber-primary transition-colors duration-300 font-semibold'>
                             {link.title}
                         </Link>
                     ))}
-                    {/* Register CTA */}
-                    <Link href="/auth" className="px-5 py-2 bg-cyber-primary text-cyber-bg font-bold rounded-md border-2 border-cyber-primary hover:bg-transparent hover:text-cyber-primary transition-all duration-300">
-                        Register
+                    <Link href="/auth">
+                        <CyberButton className="px-5 py-2 text-sm">Register</CyberButton>
                     </Link>
                 </div>
 
+                {/* Mobile: Hamburger Menu Button */}
                 <div className='md:hidden'>
                     <button onClick={() => setIsMenuOpen(!isMenuOpen)} className='text-white'>
                         {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -58,21 +60,23 @@ const Navbar = () => {
                 </div>
             </div>
 
+            {/* Mobile Menu Overlay */}
             {isMenuOpen && (
                 <div className='md:hidden absolute top-[65px] left-0 w-full bg-black/95 backdrop-blur-lg flex flex-col items-center gap-6 py-8'>
-                    {sectionLinks.map((link) => (
-                        <Link key={link.href} href={link.href} onClick={() => setIsMenuOpen(false)} className='text-xl text-gray-300 hover:text-cyber-primary transition-colors duration-300'>
+                    {mainNavLinks.map((link) => (
+                        <Link key={link.href} href={link.href} onClick={() => setIsMenuOpen(false)} className='flex items-center gap-3 text-xl text-gray-300 hover:text-cyber-primary transition-colors duration-300'>
+                            <link.icon />
                             {link.title}
                         </Link>
                     ))}
                     <div className="my-2 w-1/2 border-t border-gray-700"></div>
-                    {pageLinks.map((link) => (
+                    {userLinks.map((link) => (
                         <Link key={link.href} href={link.href} onClick={() => setIsMenuOpen(false)} className='text-xl text-gray-300 hover:text-cyber-primary transition-colors duration-300'>
                             {link.title}
                         </Link>
                     ))}
-                    <Link href="/auth" onClick={() => setIsMenuOpen(false)} className="mt-4 px-8 py-3 bg-cyber-primary text-cyber-bg font-bold rounded-md border-2 border-cyber-primary">
-                        Register
+                    <Link href="/auth" onClick={() => setIsMenuOpen(false)} className="mt-4">
+                        <CyberButton>Register</CyberButton>
                     </Link>
                 </div>
             )}
