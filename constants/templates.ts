@@ -79,5 +79,5 @@ export const web3_templates: Template[] = [
     { src: '/FigmaClone.png', title: 'Layer 2 Scaling Solution', description: 'A template for building a custom Layer 2 network.', tokenCost: 1200 },
 ];
 
-// A combined array of all templates for easy searching
+// A combined array of all templates for easy searching and infinite scroll
 export const allTemplates = [...web2_templates, ...web2_5_templates, ...web3_templates];
