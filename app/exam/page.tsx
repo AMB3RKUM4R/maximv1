@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { CyberCard } from '@/components/ui/CyberCard';
 import { Code, Smartphone, Rocket } from 'lucide-react';
-import MockTest from '@/components/main/mockTest';
 import { web2_5_questions, web2_questions, web3_questions } from '@/constants/mock-test';
+import MockTest from '@/components/main/MockTest';
 
 type TestSelection = 'Web 2.0' | 'Web 2.5' | 'Web 3.0' | null;
 
