@@ -1,10 +1,12 @@
 import Image from 'next/image';
 import React from 'react';
+import { web2_templates, web2_5_templates, web3_templates } from '@/constants/templates';
 
+// This will now feature bg2.jpg, TravelWebsite.png, and FigmaClone.png
 const projects = [
-    { src: '/FigmaClone.png', title: 'Collaborative Design Tool', description: 'A real-time design app, similar to Figma.' },
-    { src: '/TravelWebsite.png', title: 'Dynamic Travel Site', description: 'A beautiful, interactive website for travel booking.' },
-    { src: '/YoutubeClone.png', title: 'Video Streaming Platform', description: 'A clone of a modern video platform with core features.' },
+    web2_templates[1], 
+    web2_5_templates[0],
+    web3_templates[1],
 ];
 
 const Showcase = () => {

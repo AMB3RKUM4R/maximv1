@@ -36,14 +36,12 @@ const ProjectCard = ({ project }: { project: Template }) => {
     );
 };
 
-
 const InfiniteShowcase = () => {
     const [projects, setProjects] = useState<Template[]>([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const { ref, inView } = useInView();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadMoreProjects = () => {
         const nextPage = page + 1;
         const newProjects = allTemplates.slice(0, nextPage * ITEMS_PER_PAGE);
@@ -64,7 +62,7 @@ const InfiniteShowcase = () => {
         if (inView && hasMore) {
             setTimeout(loadMoreProjects, 500);
         }
-    }, [inView, hasMore, loadMoreProjects]);
+    }, [inView, hasMore]);
 
     return (
         <section id="infinite-showcase" className="py-20 px-4 md:px-10">

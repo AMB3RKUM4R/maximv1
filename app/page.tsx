@@ -1,4 +1,4 @@
-import Hero from "@/components/main/Hero";
+import HeroSlider from "@/components/main/HeroSlider"; // Import the new HeroSlider
 import HowItWorks from "@/components/main/HowItWorks";
 import Workshops from "@/components/main/Workshops";
 import Skills from "@/components/main/Skills";
@@ -12,7 +12,7 @@ import InfiniteShowcase from "@/components/main/InfiniteShowcase";
 export default function Home() {
   return (
     <div className="h-full w-full">
-      <div id="hero"><Hero /></div>
+      <div id="hero"><HeroSlider /></div> {/* Use the new HeroSlider */}
       <div className="flex flex-col gap-20 py-20">
         <div id="how-it-works"><HowItWorks /></div>
         <div id="workshops"><Workshops /></div>
